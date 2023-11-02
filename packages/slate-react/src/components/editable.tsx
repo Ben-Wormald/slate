@@ -899,6 +899,7 @@ export const Editable = (props: EditableProps) => {
     <ReadOnlyContext.Provider value={readOnly}>
       <DecorateContext.Provider value={decorate}>
         <RestoreDOM node={ref} receivedUserInput={receivedUserInput}>
+          <strong>this is ben's test slate</strong>
           <Component
             role={readOnly ? undefined : 'textbox'}
             aria-multiline={readOnly ? undefined : true}
@@ -1128,6 +1129,7 @@ export const Editable = (props: EditableProps) => {
             )}
             onCompositionEnd={useCallback(
               (event: React.CompositionEvent<HTMLDivElement>) => {
+                // TODO what about this?
                 if (ReactEditor.hasSelectableTarget(editor, event.target)) {
                   if (ReactEditor.isComposing(editor)) {
                     setIsComposing(false)

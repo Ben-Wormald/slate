@@ -286,8 +286,8 @@ const ExamplePage = ({ example }: { example: string }) => {
         <Head>
           <title>Slate Examples</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="stylesheet" href="/index.css" />
+          <link rel="icon" href="/wormab01-sandbox/favicon.ico" />
+          <link rel="stylesheet" href="/wormab01-sandbox/index.css" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i&subset=latin-ext"

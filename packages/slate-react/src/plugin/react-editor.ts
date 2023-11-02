@@ -706,7 +706,7 @@ export const ReactEditor: ReactEditorInterface = {
             // COMPAT: While composing at the start of a text node, some keyboards put
             // the text content inside the zero width space.
             if (
-              IS_ANDROID &&
+              // IS_ANDROID &&
               !exactMatch &&
               el.hasAttribute('data-slate-zero-width') &&
               el.textContent.length > 0 &&
