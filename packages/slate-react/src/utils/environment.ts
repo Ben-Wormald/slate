@@ -66,6 +66,7 @@ export const CAN_USE_DOM = !!(
   typeof window.document.createElement !== 'undefined'
 )
 
+// *** 27
 // COMPAT: Firefox/Edge Legacy don't support the `beforeinput` event
 // Chrome Legacy doesn't support `beforeinput` correctly
 export const HAS_BEFORE_INPUT_SUPPORT =

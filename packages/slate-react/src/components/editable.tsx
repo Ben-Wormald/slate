@@ -326,6 +326,7 @@ export const Editable = (props: EditableProps) => {
       const focusNode = domSelection.focusNode
       let anchorNode
 
+      // *** 06
       // COMPAT: In firefox the normal seletion way does not work
       // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
       if (IS_FIREFOX && domSelection.rangeCount > 1) {
@@ -457,6 +458,7 @@ export const Editable = (props: EditableProps) => {
           }
         }
 
+        // *** 07
         // Compat: Android IMEs try to force their selection by manually re-applying it even after we set it.
         // This essentially would make setting the slate selection during an update meaningless, so we force it
         // again here. We can't only do it in the setTimeout after the animation frame since that would cause a
@@ -494,6 +496,7 @@ export const Editable = (props: EditableProps) => {
         ReactEditor.hasEditableTarget(editor, event.target) &&
         !isDOMEventHandled(event, propsOnDOMBeforeInput)
       ) {
+        // *** 08
         // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
         if (androidInputManagerRef.current) {
           return androidInputManagerRef.current.handleDOMBeforeInput(event)
@@ -512,6 +515,7 @@ export const Editable = (props: EditableProps) => {
         const isCompositionChange =
           type === 'insertCompositionText' || type === 'deleteCompositionText'
 
+        // *** 09
         // COMPAT: use composition change events as a hint to where we should insert
         // composition text if we aren't composing to work around https://github.com/ianstormtaylor/slate/issues/5038
         if (isCompositionChange && ReactEditor.isComposing(editor)) {
@@ -706,6 +710,7 @@ export const Editable = (props: EditableProps) => {
           case 'insertReplacementText':
           case 'insertText': {
             if (type === 'insertFromComposition') {
+              // *** 10
               // COMPAT: in Safari, `compositionend` is dispatched after the
               // `beforeinput` for "insertFromComposition". But if we wait for it
               // then we will abort because we're still composing and the selection
@@ -904,6 +909,7 @@ export const Editable = (props: EditableProps) => {
             role={readOnly ? undefined : 'textbox'}
             aria-multiline={readOnly ? undefined : true}
             {...attributes}
+            // *** 11
             // COMPAT: Certain browsers don't support the `beforeinput` event, so we'd
             // have to use hacks to make these replacement-based features work.
             // For SSR situations HAS_BEFORE_INPUT_SUPPORT is false and results in prop
@@ -954,6 +960,7 @@ export const Editable = (props: EditableProps) => {
             }}
             onBeforeInput={useCallback(
               (event: React.FormEvent<HTMLDivElement>) => {
+                // *** 12
                 // COMPAT: Certain browsers don't support the `beforeinput` event, so we
                 // fall back to React's leaky polyfill instead just for it. It
                 // only works for the `insertText` input type.
@@ -1017,6 +1024,7 @@ export const Editable = (props: EditableProps) => {
                 const { relatedTarget } = event
                 const el = ReactEditor.toDOMNode(editor, editor)
 
+                // *** 13
                 // COMPAT: The event should be ignored if the focus is returning
                 // to the editor from an embedded editable element (eg. an <input>
                 // element inside a void node).
@@ -1024,6 +1032,7 @@ export const Editable = (props: EditableProps) => {
                   return
                 }
 
+                // *** 14
                 // COMPAT: The event should be ignored if the focus is moving from
                 // the editor to inside a void node's spacer element.
                 if (
@@ -1033,6 +1042,7 @@ export const Editable = (props: EditableProps) => {
                   return
                 }
 
+                // *** 15
                 // COMPAT: The event should be ignored if the focus is moving to a
                 // non- editable section of an element that isn't a void node (eg.
                 // a list item of the check list example).
@@ -1129,7 +1139,6 @@ export const Editable = (props: EditableProps) => {
             )}
             onCompositionEnd={useCallback(
               (event: React.CompositionEvent<HTMLDivElement>) => {
-                // TODO what about this?
                 if (ReactEditor.hasSelectableTarget(editor, event.target)) {
                   if (ReactEditor.isComposing(editor)) {
                     setIsComposing(false)
@@ -1145,6 +1154,7 @@ export const Editable = (props: EditableProps) => {
                     return
                   }
 
+                  // *** 16
                   // COMPAT: In Chrome, `beforeinput` events for compositions
                   // aren't correct and never fire the "insertFromComposition"
                   // type that we need. So instead, insert whenever a composition
@@ -1425,6 +1435,7 @@ export const Editable = (props: EditableProps) => {
 
                   const { nativeEvent } = event
 
+                  // *** 17
                   // COMPAT: The composition end event isn't fired reliably in all browsers,
                   // so we sometimes might end up stuck in a composition state even though we
                   // aren't composing any more.
@@ -1476,6 +1487,7 @@ export const Editable = (props: EditableProps) => {
                     return
                   }
 
+                  // *** 18
                   // COMPAT: Certain browsers don't handle the selection updates
                   // properly. In Chrome, the selection isn't properly extended.
                   // And in Firefox, the selection isn't properly collapsed.
@@ -1508,6 +1520,7 @@ export const Editable = (props: EditableProps) => {
                     return
                   }
 
+                  // *** 19
                   // COMPAT: If a void node is selected, or a zero-width text node
                   // adjacent to an inline is selected, we need to handle these
                   // hotkeys manually because browsers won't be able to skip over
@@ -1559,6 +1572,7 @@ export const Editable = (props: EditableProps) => {
                     return
                   }
 
+                  // *** 20
                   // COMPAT: Certain browsers don't support the `beforeinput` event, so we
                   // fall back to guessing at the input intention for hotkeys.
                   // COMPAT: In iOS, some of these hotkeys are handled in the
@@ -1697,6 +1711,7 @@ export const Editable = (props: EditableProps) => {
                   ReactEditor.hasEditableTarget(editor, event.target) &&
                   !isEventHandled(event, attributes.onPaste)
                 ) {
+                  // *** 21
                   // COMPAT: Certain browsers don't support the `beforeinput` event, so we
                   // fall back to React's `onPaste` here instead.
                   // COMPAT: Firefox, Chrome and Safari don't emit `beforeinput` events
@@ -1754,6 +1769,7 @@ export const DefaultPlaceholder = ({
   attributes,
   children,
 }: RenderPlaceholderProps) => (
+  // *** 22
   // COMPAT: Artificially add a line-break to the end on the placeholder element
   // to prevent Android IMEs to pick up its content in autocorrect and to auto-capitalize the first letter
   <span {...attributes}>

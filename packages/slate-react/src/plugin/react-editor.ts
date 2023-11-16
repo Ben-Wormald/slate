@@ -573,6 +573,7 @@ export const ReactEditor: ReactEditorInterface = {
       ) {
         const domText = nextText.childNodes[0]
 
+        // *** 03
         domPoint = [
           // COMPAT: If we don't explicity set the dom point to be on the actual
           // dom text element, chrome will put the selection behind the actual dom
@@ -703,6 +704,7 @@ export const ReactEditor: ReactEditorInterface = {
           ]
 
           removals.forEach(el => {
+            // *** 04
             // COMPAT: While composing at the start of a text node, some keyboards put
             // the text content inside the zero width space.
             if (
@@ -759,6 +761,7 @@ export const ReactEditor: ReactEditorInterface = {
       if (
         domNode &&
         offset === domNode.textContent!.length &&
+        // *** 05
         // COMPAT: Android IMEs might remove the zero width space while composing,
         // and we don't add it for line-breaks.
         IS_ANDROID &&
@@ -943,6 +946,7 @@ export const ReactEditor: ReactEditorInterface = {
       )
     }
 
+    // *** 24
     // COMPAT: Triple-clicking a word in chrome will sometimes place the focus
     // inside a `contenteditable="false"` DOM node following the word, which
     // will cause `toSlatePoint` to throw an error. (2023/03/07)

@@ -247,6 +247,7 @@ export const withReact = <T extends BaseEditor>(
       }
     })
 
+    // *** 25
     // COMPAT: If the end node is a void node, we need to move the end of the
     // range from the void node's spacer span, to the end of the void node's
     // content, since the spacer is before void's content in the DOM.
@@ -258,6 +259,7 @@ export const withReact = <T extends BaseEditor>(
       contents = r.cloneContents()
     }
 
+    // *** 26
     // COMPAT: If the start node is a void node, we need to attach the encoded
     // fragment to the void node's content node instead of the spacer, because
     // attaching it to empty `<div>/<span>` nodes will end up having it erased by

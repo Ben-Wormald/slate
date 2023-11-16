@@ -22,6 +22,7 @@ const String = (props: {
   const parentPath = Path.parent(path)
   const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL])
 
+  // *** 23
   // COMPAT: Render text inside void nodes with a zero-width space.
   // So the node can contain selection but the text is not visible.
   if (editor.isVoid(parent)) {
@@ -127,6 +128,7 @@ export const ZeroWidthString = (props: {
     attributes['data-slate-mark-placeholder'] = true
   }
 
+  // *** 01
   return (
     <span {...attributes}>
       {!IS_ANDROID || !isLineBreak ? '\uFEFF' : null}
