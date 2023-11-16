@@ -251,6 +251,7 @@ export const withReact = <T extends BaseEditor>(
     // COMPAT: If the end node is a void node, we need to move the end of the
     // range from the void node's spacer span, to the end of the void node's
     // content, since the spacer is before void's content in the DOM.
+    console.log('setFragmentData endVoid', !!endVoid);
     if (endVoid) {
       const [voidNode] = endVoid
       const r = domRange.cloneRange()
@@ -264,6 +265,7 @@ export const withReact = <T extends BaseEditor>(
     // fragment to the void node's content node instead of the spacer, because
     // attaching it to empty `<div>/<span>` nodes will end up having it erased by
     // most browsers. (2018/04/27)
+    console.log('setFragmentData startVoid', !!startVoid);
     if (startVoid) {
       attach = contents.querySelector('[data-slate-spacer]')! as HTMLElement
     }

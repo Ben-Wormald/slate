@@ -904,7 +904,6 @@ export const Editable = (props: EditableProps) => {
     <ReadOnlyContext.Provider value={readOnly}>
       <DecorateContext.Provider value={decorate}>
         <RestoreDOM node={ref} receivedUserInput={receivedUserInput}>
-          <strong>this is ben's test slate</strong>
           <Component
             role={readOnly ? undefined : 'textbox'}
             aria-multiline={readOnly ? undefined : true}
@@ -964,15 +963,26 @@ export const Editable = (props: EditableProps) => {
                 // COMPAT: Certain browsers don't support the `beforeinput` event, so we
                 // fall back to React's leaky polyfill instead just for it. It
                 // only works for the `insertText` input type.
+
+                const isEventHandledResult = isEventHandled(event, attributes.onBeforeInput);
+                const hasSelectableTarget = ReactEditor.hasSelectableTarget(editor, event.target);
+
+                console.log('onBeforeInput event', event);
+                console.log('onBeforeInput isEventHandled', isEventHandledResult);
+                console.log('onBeforeInput hasSelectableTarget', hasSelectableTarget);
+
                 if (
                   !HAS_BEFORE_INPUT_SUPPORT &&
                   !readOnly &&
-                  !isEventHandled(event, attributes.onBeforeInput) &&
-                  ReactEditor.hasSelectableTarget(editor, event.target)
+                  !isEventHandledResult &&
+                  hasSelectableTarget
                 ) {
                   event.preventDefault()
-                  if (!ReactEditor.isComposing(editor)) {
+                  const isComposing = ReactEditor.isComposing(editor);
+                  console.log('onBeforeInput isComposing', isComposing);
+                  if (!isComposing) {
                     const text = (event as any).data as string
+                    console.log('onBeforeInput text', text);
                     Editor.insertText(editor, text)
                   }
                 }
@@ -981,11 +991,15 @@ export const Editable = (props: EditableProps) => {
             )}
             onInput={useCallback(
               (event: React.FormEvent<HTMLDivElement>) => {
+
+                console.log('onInput event', event);
                 if (isEventHandled(event, attributes.onInput)) {
+                  console.log('onInput isEventHandled', true);
                   return
                 }
 
                 if (androidInputManagerRef.current) {
+                  console.log('onInput androidInputManagerRef.current', true);
                   androidInputManagerRef.current.handleInput()
                   return
                 }
@@ -1003,6 +1017,7 @@ export const Editable = (props: EditableProps) => {
             )}
             onBlur={useCallback(
               (event: React.FocusEvent<HTMLDivElement>) => {
+                console.log('onBlur event', event);
                 if (
                   readOnly ||
                   state.isUpdatingSelection ||
@@ -1139,16 +1154,23 @@ export const Editable = (props: EditableProps) => {
             )}
             onCompositionEnd={useCallback(
               (event: React.CompositionEvent<HTMLDivElement>) => {
+                console.log('onCompositionEnd event', event);
                 if (ReactEditor.hasSelectableTarget(editor, event.target)) {
+                  console.log('onCompositionEnd hasSelectableTarget', true);
                   if (ReactEditor.isComposing(editor)) {
+                    console.log('onCompositionEnd isComposing', true);
                     setIsComposing(false)
                     IS_COMPOSING.set(editor, false)
                   }
 
                   androidInputManagerRef.current?.handleCompositionEnd(event)
 
+                  const isEventHandledResult = isEventHandled(event, attributes.onCompositionEnd);
+
+                  console.log('onCompositionEnd isEventHandled', isEventHandledResult);
+
                   if (
-                    isEventHandled(event, attributes.onCompositionEnd) ||
+                    isEventHandledResult ||
                     IS_ANDROID
                   ) {
                     return
@@ -1167,6 +1189,7 @@ export const Editable = (props: EditableProps) => {
                     !IS_UC_MOBILE &&
                     event.data
                   ) {
+                    console.log('onCompositionEnd IS_ && evene.data', true);
                     const placeholderMarks =
                       EDITOR_TO_PENDING_INSERTION_MARKS.get(editor)
                     EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor)
@@ -1191,11 +1214,14 @@ export const Editable = (props: EditableProps) => {
             )}
             onCompositionUpdate={useCallback(
               (event: React.CompositionEvent<HTMLDivElement>) => {
+                console.log('onCompositionUpdate event', event);
                 if (
                   ReactEditor.hasSelectableTarget(editor, event.target) &&
                   !isEventHandled(event, attributes.onCompositionUpdate)
                 ) {
+                  console.log('onCompositionUpdate hasSelectableTarget', true);
                   if (!ReactEditor.isComposing(editor)) {
+                    console.log('onCompositionUpdate isComposing', false);
                     setIsComposing(true)
                     IS_COMPOSING.set(editor, true)
                   }
@@ -1205,7 +1231,9 @@ export const Editable = (props: EditableProps) => {
             )}
             onCompositionStart={useCallback(
               (event: React.CompositionEvent<HTMLDivElement>) => {
+                console.log('onCompositionStart event', event);
                 if (ReactEditor.hasSelectableTarget(editor, event.target)) {
+                  console.log('onCompositionStart hasSelectableTarget', true);
                   androidInputManagerRef.current?.handleCompositionStart(event)
 
                   if (
@@ -1402,12 +1430,14 @@ export const Editable = (props: EditableProps) => {
             )}
             onFocus={useCallback(
               (event: React.FocusEvent<HTMLDivElement>) => {
+                console.log('onFocus event', event);
                 if (
                   !readOnly &&
                   !state.isUpdatingSelection &&
                   ReactEditor.hasEditableTarget(editor, event.target) &&
                   !isEventHandled(event, attributes.onFocus)
                 ) {
+                  console.log('onFocus &&', true);
                   const el = ReactEditor.toDOMNode(editor, editor)
                   const root = ReactEditor.findDocumentOrShadowRoot(editor)
                   state.latestElement = root.activeElement
@@ -1416,6 +1446,7 @@ export const Editable = (props: EditableProps) => {
                   // can go to them. In Firefox, this must be prevented because it
                   // results in issues with keyboard navigation. (2017/03/30)
                   if (IS_FIREFOX && event.target !== el) {
+                    console.log('onFocus IS_FIREFOX && event.target !== el', true);
                     el.focus()
                     return
                   }
@@ -1427,10 +1458,12 @@ export const Editable = (props: EditableProps) => {
             )}
             onKeyDown={useCallback(
               (event: React.KeyboardEvent<HTMLDivElement>) => {
+                console.log('onKeyDown event', event);
                 if (
                   !readOnly &&
                   ReactEditor.hasEditableTarget(editor, event.target)
                 ) {
+                  console.log('onKeyDown &&', true);
                   androidInputManagerRef.current?.handleKeyDown(event)
 
                   const { nativeEvent } = event
@@ -1443,6 +1476,7 @@ export const Editable = (props: EditableProps) => {
                     ReactEditor.isComposing(editor) &&
                     nativeEvent.isComposing === false
                   ) {
+                    console.log('onKeyDown isCompsing', true);
                     IS_COMPOSING.set(editor, false)
                     setIsComposing(false)
                   }
@@ -1451,6 +1485,7 @@ export const Editable = (props: EditableProps) => {
                     isEventHandled(event, attributes.onKeyDown) ||
                     ReactEditor.isComposing(editor)
                   ) {
+                    console.log('onKeyDown isEventHandled', true);
                     return
                   }
 
@@ -1706,6 +1741,7 @@ export const Editable = (props: EditableProps) => {
             )}
             onPaste={useCallback(
               (event: React.ClipboardEvent<HTMLDivElement>) => {
+                console.log('onPaste event', event);
                 if (
                   !readOnly &&
                   ReactEditor.hasEditableTarget(editor, event.target) &&

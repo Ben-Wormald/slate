@@ -26,6 +26,7 @@ const String = (props: {
   // COMPAT: Render text inside void nodes with a zero-width space.
   // So the node can contain selection but the text is not visible.
   if (editor.isVoid(parent)) {
+    console.log('String isVoid', true);
     return <ZeroWidthString length={Node.string(parent).length} />
   }
 
@@ -38,6 +39,7 @@ const String = (props: {
     !editor.isInline(parent) &&
     Editor.string(editor, parentPath) === ''
   ) {
+    console.log('String last text node in an empty block', true);
     return <ZeroWidthString isLineBreak isMarkPlaceholder={isMarkPlaceholder} />
   }
 
@@ -45,12 +47,14 @@ const String = (props: {
   // node, so we render a zero-width space so that the selection can be
   // inserted next to it still.
   if (leaf.text === '') {
+    console.log('String text = ""', true);
     return <ZeroWidthString isMarkPlaceholder={isMarkPlaceholder} />
   }
 
   // COMPAT: Browsers will collapse trailing new lines at the end of blocks,
   // so we need to add an extra trailing new lines to prevent that.
   if (isLast && leaf.text.slice(-1) === '\n') {
+    console.log('String trailing \\n', true);
     return <TextString isTrailing text={leaf.text} />
   }
 

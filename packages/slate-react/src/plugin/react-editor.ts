@@ -571,6 +571,7 @@ export const ReactEditor: ReactEditorInterface = {
         point.offset === end &&
         nextText?.hasAttribute('data-slate-mark-placeholder')
       ) {
+        console.log('toDOMPoint hasAttribute', true);
         const domText = nextText.childNodes[0]
 
         // *** 03
@@ -707,8 +708,13 @@ export const ReactEditor: ReactEditorInterface = {
             // *** 04
             // COMPAT: While composing at the start of a text node, some keyboards put
             // the text content inside the zero width space.
+
+            console.log('toSlatePoint exactMatch', exactMatch);
+            console.log('toSlatePoint hasAttribute zw', el.hasAttribute('data-slate-zero-width'));
+            console.log('toSlatePoint textContext != FEFF', el.textContext !== '\uFEFF');
+
             if (
-              // IS_ANDROID &&
+              IS_ANDROID &&
               !exactMatch &&
               el.hasAttribute('data-slate-zero-width') &&
               el.textContent.length > 0 &&
@@ -757,6 +763,10 @@ export const ReactEditor: ReactEditorInterface = {
           })
         }
       }
+
+      console.log('toSlatePoint exactMatch', exactMatch);
+      console.log('toSlatePoint getAttribute zw = z', domNode && domNode.getAttribute('data-slate-zero-width') === 'z');
+      console.log('toSlatePoint startsWith FEFF', domNode && domNode.textContent?.startsWith('\uFEFF'));
 
       if (
         domNode &&
@@ -955,6 +965,7 @@ export const ReactEditor: ReactEditorInterface = {
       (focusNode as HTMLElement).getAttribute('contenteditable') === 'false' &&
       (focusNode as HTMLElement).getAttribute('data-slate-void') !== 'true'
     ) {
+      console.log('toSlateRange triple click');
       focusNode = anchorNode
       focusOffset = anchorNode.textContent?.length || 0
     }

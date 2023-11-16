@@ -594,6 +594,7 @@ export function createAndroidInputManager({
         // COMPAT: If we are writing inside a placeholder, the ime inserts the text inside
         // the placeholder itself and thus includes the zero-width space inside edit events.
         if (EDITOR_TO_PENDING_INSERTION_MARKS.get(editor)) {
+          console.log('android EDITOR_TO_PENDING_INSERTION_MARKS', true);
           text = text.replace('\uFEFF', '')
         }
 
